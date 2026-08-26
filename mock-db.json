@@ -1,0 +1,13 @@
+﻿{
+  "branches": [
+    { "id": 1, "code": "BR-001", "name": "Downtown Branch", "address": "101 Main St" }
+  ],
+  "employees": [
+    { "id": 12, "name": "Jane Doe", "username": "jdoe_mgr", "role": "BRANCH_MANAGER", "branchId": 1 }
+  ],
+  "vaults": [
+    { "id": 5, "vaultNumber": "VLT-MAIN-01", "branchId": 1, "status": "LOCKED" }
+  ],
+  "vaultRequests": [],
+  "auditLogs": []
+}
