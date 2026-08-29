@@ -103,11 +103,11 @@ VALUES
 -- Employees (Passwords are BCrypt hashed for 'password123': $2a$10$wN3W6eYQn6eYh7rG9L/pfe91Z2nL2/2P... standard)
 INSERT INTO employees (id, employee_code, username, password_hash, full_name, email, role, branch_id, is_active)
 VALUES
-(101, 'EMP-0101', 'johndoe', '$2a$10$d8oP8qQj4j0oMvOQ4zWJg.3A/HwE9uS1a0Vf1pC0qN0dK3bI1.8iK', 'John Doe', 'johndoe@securevault.internal', 'OFFICER', 1, TRUE),
-(102, 'EMP-0102', 'sarahsmith', '$2a$10$d8oP8qQj4j0oMvOQ4zWJg.3A/HwE9uS1a0Vf1pC0qN0dK3bI1.8iK', 'Sarah Smith', 'sarahsmith@securevault.internal', 'BRANCH_MANAGER', 1, TRUE),
-(103, 'EMP-0103', 'davidkumar', '$2a$10$d8oP8qQj4j0oMvOQ4zWJg.3A/HwE9uS1a0Vf1pC0qN0dK3bI1.8iK', 'David Kumar', 'davidkumar@securevault.internal', 'AUDITOR', 1, TRUE),
-(104, 'EMP-0201', 'priyasharma', '$2a$10$d8oP8qQj4j0oMvOQ4zWJg.3A/HwE9uS1a0Vf1pC0qN0dK3bI1.8iK', 'Priya Sharma', 'priyasharma@securevault.internal', 'BRANCH_MANAGER', 2, TRUE),
-(105, 'EMP-0301', 'alexchen', '$2a$10$d8oP8qQj4j0oMvOQ4zWJg.3A/HwE9uS1a0Vf1pC0qN0dK3bI1.8iK', 'Alex Chen', 'alexchen@securevault.internal', 'OFFICER', 3, TRUE);
+(101, 'EMP-0101', 'johndoe', '$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW', 'John Doe', 'johndoe@securevault.internal', 'OFFICER', 1, TRUE),
+(102, 'EMP-0102', 'sarahsmith', '$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW', 'Sarah Smith', 'sarahsmith@securevault.internal', 'BRANCH_MANAGER', 1, TRUE),
+(103, 'EMP-0103', 'davidkumar', '$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW', 'David Kumar', 'davidkumar@securevault.internal', 'AUDITOR', 1, TRUE),
+(104, 'EMP-0201', 'priyasharma', '$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW', 'Priya Sharma', 'priyasharma@securevault.internal', 'BRANCH_MANAGER', 2, TRUE),
+(105, 'EMP-0301', 'alexchen', '$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW', 'Alex Chen', 'alexchen@securevault.internal', 'OFFICER', 3, TRUE);
 
 -- Vaults
 INSERT INTO vaults (id, vault_code, branch_id, name, security_level, max_concurrent_access, is_locked)
