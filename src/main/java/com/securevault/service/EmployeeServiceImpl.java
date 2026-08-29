@@ -2,6 +2,7 @@ package com.securevault.service;
 
 import com.securevault.entity.User;
 import com.securevault.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,13 +11,20 @@ import java.util.List;
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public EmployeeServiceImpl(UserRepository userRepository) {
+    public EmployeeServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public User createEmployee(User employee) {
+        if (employee.getPassword() != null && !employee.getPassword().isBlank()) {
+            if (!employee.getPassword().startsWith("$2a$") && !employee.getPassword().startsWith("$2b$")) {
+                employee.setPassword(passwordEncoder.encode(employee.getPassword()));
+            }
+        }
         return userRepository.save(employee);
     }
 

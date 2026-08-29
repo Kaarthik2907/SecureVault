@@ -1,5 +1,7 @@
 package com.securevault.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,6 +34,7 @@ public class User implements UserDetails {
     @Column(name = "username", nullable = false, unique = true, length = 50)
     private String username;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "password_hash", nullable = false, length = 255)
     private String password;
 
@@ -165,6 +168,7 @@ public class User implements UserDetails {
     }
 
     // UserDetails implementations
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (role == null || role.isBlank()) {
@@ -174,16 +178,19 @@ public class User implements UserDetails {
         return List.of(new SimpleGrantedAuthority(formattedRole), new SimpleGrantedAuthority(role));
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
