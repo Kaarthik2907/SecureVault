@@ -1,0 +1,1 @@
+import CrudPage from "../components/CrudPage";import {branchApi} from "../api/services";export default()=> <CrudPage title="Branch Management" service={branchApi} fields={[{name:"branchCode",label:"Branch Code"},{name:"name",label:"Name"},{name:"city",label:"City"},{name:"address",label:"Address"},{name:"contactNumber",label:"Contact Number"}]}/>;

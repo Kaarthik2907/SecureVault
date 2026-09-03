@@ -1,0 +1,9 @@
+import {useEffect,useState} from "react";
+export default function CrudPage({title,fields,service}){
+ const [rows,setRows]=useState([]),[form,setForm]=useState({}),[editing,setEditing]=useState(null),[loading,setLoading]=useState(true),[error,setError]=useState("");
+ const load=async()=>{setLoading(true);try{setRows((await service.list()).data)}catch(e){setError(e.response?.data?.message||"Unable to load data. Ensure backend is running and you are logged in.")}finally{setLoading(false)}};
+ useEffect(()=>{load()},[]);
+ const save=async e=>{e.preventDefault();try{if(editing)await service.update(editing.id,form);else await service.create(form);setForm({});setEditing(null);load()}catch(e){setError(e.response?.data?.message||"Save failed")}};
+ const edit=r=>{setEditing(r);const f={};fields.forEach(x=>f[x.name]=r[x.name]??"");setForm(f)};
+ const del=async id=>{if(confirm("Delete this record? This may be restricted by backend/database audit rules.")){try{await service.remove(id);load()}catch(e){setError(e.response?.data?.message||"Delete failed")}}};
+ return <section><h1>{title}</h1>{error&&<div className="error">{error}</div>}<form className="form" onSubmit={save}>{fields.map(f=><label key={f.name}>{f.label}<input required={f.required!==false} type={f.type||"text"} value={form[f.name]??""} onChange={e=>setForm({...form,[f.name]:f.type==="checkbox"?e.target.checked:e.target.value})}/></label>)}<button>{editing?"Update":"Create"}</button>{editing&&<button type="button" onClick={()=>{setEditing(null);setForm({})}}>Cancel</button>}</form>{loading?<p>Loading...</p>:<table><thead><tr>{fields.map(f=><th key={f.name}>{f.label}</th>)}<th>Actions</th></tr></thead><tbody>{rows.map(r=><tr key={r.id}>{fields.map(f=><td key={f.name}>{String(r[f.name]??"")}</td>)}<td><button onClick={()=>edit(r)}>Edit</button> <button onClick={()=>del(r.id)}>Delete</button></td></tr>)}</tbody></table>}</section>}
