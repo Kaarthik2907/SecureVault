@@ -4,6 +4,7 @@ import com.securevault.entity.Branch;
 import com.securevault.service.BranchService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,22 +20,26 @@ public class BranchController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Branch> createBranch(@RequestBody Branch branch) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(branchService.createBranch(branch));
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'BRANCH_MANAGER')")
     public ResponseEntity<List<Branch>> getAllBranches() {
         return ResponseEntity.ok(branchService.getAllBranches());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'BRANCH_MANAGER')")
     public ResponseEntity<Branch> getBranchById(@PathVariable Long id) {
         return ResponseEntity.ok(branchService.getBranchById(id));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Branch> updateBranch(
             @PathVariable Long id,
             @RequestBody Branch branch) {
@@ -42,6 +47,7 @@ public class BranchController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteBranch(@PathVariable Long id) {
         branchService.deleteBranch(id);
         return ResponseEntity.noContent().build();
