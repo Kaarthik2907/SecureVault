@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS vaults (
     name VARCHAR(150) NOT NULL,
     security_level VARCHAR(50) NOT NULL DEFAULT 'HIGH',
     max_concurrent_access INT NOT NULL DEFAULT 1,
+    status VARCHAR(50) NOT NULL DEFAULT 'LOCKED',
     is_locked BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -110,12 +111,12 @@ VALUES
 (105, 'EMP-0301', 'alexchen', '$2a$10$J89Mn74HG0R4i1M08bJAIuv0OnCCdEmOvC4TvPM17tLkeHhfVOi1m', 'Alex Chen', 'alexchen@securevault.internal', 'OFFICER', 3, TRUE);
 
 -- Vaults
-INSERT INTO vaults (id, vault_code, branch_id, name, security_level, max_concurrent_access, is_locked)
+INSERT INTO vaults (id, vault_code, branch_id, name, security_level, max_concurrent_access, status, is_locked)
 VALUES
-(501, 'VLT-MUM-A1', 1, 'High Value Bullion Vault A1', 'CRITICAL', 2, TRUE),
-(502, 'VLT-MUM-B2', 1, 'Securities & Deposit Locker B2', 'HIGH', 4, TRUE),
-(503, 'VLT-DEL-01', 2, 'Reserve Currency Vault 01', 'CRITICAL', 2, TRUE),
-(504, 'VLT-BLR-01', 3, 'Digital Asset & Escrow Storage 01', 'HIGH', 3, TRUE);
+(501, 'VLT-MUM-A1', 1, 'High Value Bullion Vault A1', 'CRITICAL', 2, 'LOCKED', TRUE),
+(502, 'VLT-MUM-B2', 1, 'Securities & Deposit Locker B2', 'HIGH', 4, 'LOCKED', TRUE),
+(503, 'VLT-DEL-01', 2, 'Reserve Currency Vault 01', 'CRITICAL', 2, 'LOCKED', TRUE),
+(504, 'VLT-BLR-01', 3, 'Digital Asset & Escrow Storage 01', 'HIGH', 3, 'LOCKED', TRUE);
 
 -- Vault Access Requests
 INSERT INTO vault_access_requests (id, vault_id, requested_by_id, approved_by_id, reason, estimated_duration_minutes, status, authorization_code, remarks, requested_at, approved_at)
