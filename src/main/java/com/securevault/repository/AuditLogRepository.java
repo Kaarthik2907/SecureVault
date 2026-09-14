@@ -2,11 +2,9 @@ package com.securevault.repository;
 
 import com.securevault.entity.AuditLog;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import jakarta.persistence.LockModeType;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,17 +20,17 @@ public interface AuditLogRepository extends JpaRepository<AuditLog, Long> {
      * PESSIMISTIC_WRITE prevents concurrent transactions from
      * reading the same latest hash and creating a fork in the chain.
      */
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("""
-            SELECT a
-            FROM AuditLog a
-            WHERE a.id = (
-                SELECT MAX(a2.id)
-                FROM AuditLog a2
-            )
-            """)
-    Optional<AuditLog> findLatestForUpdate();
-
+    @Query(
+    value = """
+        SELECT *
+        FROM audit_logs
+        ORDER BY id DESC
+        LIMIT 1
+        FOR UPDATE
+        """,
+    nativeQuery = true
+)
+Optional<AuditLog> findLatestForUpdate();
     /**
      * Returns all audit logs in chronological/id order.
      * Used later by the chain verification logic.
