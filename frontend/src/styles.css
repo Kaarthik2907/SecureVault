@@ -1953,8 +1953,17 @@ body {
 
 .sv-login-presets {
   margin-top: 1.5rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--border-subtle);
+  padding: 1rem;
+  background: rgba(11, 17, 30, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.sv-presets-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.65rem;
 }
 
 .sv-presets-label {
@@ -1963,41 +1972,125 @@ body {
   color: var(--text-muted);
   letter-spacing: 0.05em;
   display: block;
-  margin-bottom: 0.5rem;
+}
+
+.sv-presets-selected-tag {
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  color: #38bdf8;
+  font-weight: 600;
 }
 
 .sv-presets-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.5rem;
+  gap: 0.6rem;
 }
 
 .sv-preset-btn {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-subtle);
-  border-radius: 6px;
-  padding: 0.5rem;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.65rem 0.6rem;
   text-align: left;
   cursor: pointer;
-  transition: all 0.15s ease;
-}
-.sv-preset-btn:hover {
-  background: rgba(6, 182, 212, 0.15);
-  border-color: rgba(6, 182, 212, 0.3);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.sv-preset-role {
-  font-size: 0.62rem;
-  font-weight: 700;
-  color: #38bdf8;
+.sv-preset-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
+
+/* Specific role borders */
+.sv-preset-btn.sv-preset-officer {
+  border-color: rgba(6, 182, 212, 0.3);
+}
+.sv-preset-btn.sv-preset-officer:hover {
+  border-color: #06b6d4;
+  box-shadow: 0 0 12px rgba(6, 182, 212, 0.25);
+}
+
+.sv-preset-btn.sv-preset-branch_manager {
+  border-color: rgba(245, 158, 11, 0.3);
+}
+.sv-preset-btn.sv-preset-branch_manager:hover {
+  border-color: #f59e0b;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
+}
+
+.sv-preset-btn.sv-preset-auditor {
+  border-color: rgba(99, 102, 241, 0.3);
+}
+.sv-preset-btn.sv-preset-auditor:hover {
+  border-color: #818cf8;
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.25);
+}
+
+/* Active / Selected button border state */
+.sv-preset-btn.selected {
+  border-width: 1.5px;
+  border-color: #38bdf8;
+  background: rgba(6, 182, 212, 0.15);
+  box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.35), 0 4px 14px rgba(6, 182, 212, 0.2);
+}
+
+.sv-preset-btn.selected.sv-preset-branch_manager {
+  border-color: #fbbf24;
+  background: rgba(245, 158, 11, 0.15);
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.35), 0 4px 14px rgba(245, 158, 11, 0.2);
+}
+
+.sv-preset-btn.selected.sv-preset-auditor {
+  border-color: #a5b4fc;
+  background: rgba(99, 102, 241, 0.15);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.35), 0 4px 14px rgba(99, 102, 241, 0.2);
+}
+
+.sv-preset-role-chip {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.sv-preset-role-chip.officer {
+  color: #38bdf8;
+  background: rgba(6, 182, 212, 0.15);
+  border: 1px solid rgba(6, 182, 212, 0.35);
+}
+
+.sv-preset-role-chip.branch_manager {
+  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.sv-preset-role-chip.auditor {
+  color: #c7d2fe;
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+}
+
 .sv-preset-name {
-  font-size: 0.72rem;
-  color: #e2e8f0;
-  margin-top: 0.15rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #f1f5f9;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.sv-preset-sub {
+  font-size: 0.68rem;
+  color: var(--text-muted);
 }
 
 .sv-login-footer {

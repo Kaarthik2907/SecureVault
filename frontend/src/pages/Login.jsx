@@ -18,6 +18,8 @@ export default function Login() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
+  const [selectedPreset, setSelectedPreset] = useState("");
+
   const { login, backendOnline, apiMode, setApiMode } = useAuth();
   const navigate = useNavigate();
 
@@ -43,6 +45,7 @@ export default function Login() {
   const handleSelectPreset = (preset) => {
     setUsername(preset.username);
     setPassword(preset.password);
+    setSelectedPreset(preset.username);
   };
 
   return (
@@ -119,19 +122,30 @@ export default function Login() {
 
           {/* Quick Demo Personas Bar */}
           <div className="sv-login-presets">
-            <span className="sv-presets-label">QUICK PERSONA LOGIN (ONE-CLICK FILL):</span>
+            <div className="sv-presets-header">
+              <span className="sv-presets-label">QUICK PERSONA LOGIN (ONE-CLICK FILL)</span>
+              {selectedPreset && (
+                <span className="sv-presets-selected-tag">Selected: @{selectedPreset}</span>
+              )}
+            </div>
             <div className="sv-presets-grid">
-              {PRESET_USERS.slice(0, 3).map((p) => (
-                <button
-                  key={p.username}
-                  type="button"
-                  className="sv-preset-btn"
-                  onClick={() => handleSelectPreset(p)}
-                >
-                  <div className="sv-preset-role">{p.role}</div>
-                  <div className="sv-preset-name">{p.name}</div>
-                </button>
-              ))}
+              {PRESET_USERS.slice(0, 3).map((p) => {
+                const isSelected = selectedPreset === p.username;
+                return (
+                  <button
+                    key={p.username}
+                    type="button"
+                    className={`sv-preset-btn ${isSelected ? "selected" : ""} sv-preset-${p.role.toLowerCase()}`}
+                    onClick={() => handleSelectPreset(p)}
+                  >
+                    <span className={`sv-preset-role-chip ${p.role.toLowerCase()}`}>
+                      {p.role === "BRANCH_MANAGER" ? "MANAGER" : p.role}
+                    </span>
+                    <span className="sv-preset-name">{p.name.split(" ")[0]}</span>
+                    <span className="sv-preset-sub font-mono">@{p.username}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
