@@ -169,7 +169,7 @@ export default function Branches() {
       {/* Branch Grid */}
       {loading ? (
         <div className="sv-loading-state">
-          <RefreshCw className="w-8 h-8 animate-spin text-cyan-400 mb-2" />
+          <RefreshCw className="w-8 h-8 animate-spin text-blue-400 mb-2" />
           <span>Connecting to Branch Controller...</span>
         </div>
       ) : filtered.length === 0 ? (
@@ -194,7 +194,7 @@ export default function Branches() {
 
                 <div className="sv-branch-info-list">
                   <div className="sv-branch-info-item">
-                    <MapPin className="w-4 h-4 text-cyan-400 mr-2 flex-shrink-0" />
+                    <MapPin className="w-4 h-4 text-slate-400 mr-2 flex-shrink-0" />
                     <span>{b.city} — {b.address}</span>
                   </div>
 

@@ -167,7 +167,7 @@ export default function Vaults() {
       <div className="sv-stat-cards">
         <div className="sv-stat-card">
           <span className="sv-stat-label">Total Vaults</span>
-          <div className="sv-stat-val text-cyan-400">{totalVaults}</div>
+          <div className="sv-stat-val text-blue-400">{totalVaults}</div>
           <span className="sv-stat-desc">Provisioned physical enclosures</span>
         </div>
 
@@ -240,7 +240,7 @@ export default function Vaults() {
       {/* Vaults Grid */}
       {loading ? (
         <div className="sv-loading-state">
-          <RefreshCw className="w-8 h-8 animate-spin text-cyan-400 mb-2" />
+          <RefreshCw className="w-8 h-8 animate-spin text-blue-400 mb-2" />
           <span>Connecting to Vault Endpoints...</span>
         </div>
       ) : filteredVaults.length === 0 ? (
@@ -284,7 +284,7 @@ export default function Vaults() {
 
                   <div className="sv-vault-details">
                     <div className="sv-vault-detail-item">
-                      <Building2 className="w-4 h-4 text-cyan-400 mr-2" />
+                      <Building2 className="w-4 h-4 text-slate-400 mr-2" />
                       <span>{branch?.name || `Branch #${v.branchId || 1}`}</span>
                     </div>
 

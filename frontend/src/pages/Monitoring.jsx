@@ -119,7 +119,7 @@ export default function Monitoring() {
       <div className="sv-card mb-6">
         <div className="sv-filter-bar">
           <div className="flex items-center text-sm text-slate-300">
-            <Filter className="w-4 h-4 mr-2 text-cyan-400" />
+            <Filter className="w-4 h-4 mr-2 text-slate-400" />
             <span>Filter Severity:</span>
           </div>
           <div className="sv-tab-pills">
@@ -165,7 +165,7 @@ export default function Monitoring() {
             <tbody>
               {filtered.map((inc) => (
                 <tr key={inc.id}>
-                  <td className="font-mono text-cyan-400 font-semibold">{inc.id}</td>
+                  <td className="font-mono text-blue-400 font-semibold">{inc.id}</td>
                   <td>
                     <b>{inc.rule}</b>
                     <p className="text-xs text-slate-400 mt-0.5">{inc.details}</p>

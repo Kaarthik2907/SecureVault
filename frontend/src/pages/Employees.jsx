@@ -217,7 +217,7 @@ export default function Employees() {
       <div className="sv-card">
         {loading ? (
           <div className="sv-loading-state">
-            <RefreshCw className="w-8 h-8 animate-spin text-cyan-400 mb-2" />
+            <RefreshCw className="w-8 h-8 animate-spin text-blue-400 mb-2" />
             <span>Connecting to Employee Controller...</span>
           </div>
         ) : filtered.length === 0 ? (
@@ -248,7 +248,7 @@ export default function Employees() {
                   );
                   return (
                     <tr key={emp.id}>
-                      <td className="font-mono text-cyan-400 font-semibold">{emp.employeeCode}</td>
+                      <td className="font-mono text-blue-400 font-semibold">{emp.employeeCode}</td>
                       <td>
                         <b>{emp.fullName}</b>
                       </td>
@@ -260,7 +260,7 @@ export default function Employees() {
                       </td>
                       <td>
                         <div className="flex items-center text-xs text-slate-300">
-                          <Building2 className="w-3.5 h-3.5 mr-1 text-cyan-400" />
+                          <Building2 className="w-3.5 h-3.5 mr-1 text-slate-400" />
                           <span>{branch?.name || `Branch #${emp.branchId || 1}`}</span>
                         </div>
                       </td>

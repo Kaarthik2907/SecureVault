@@ -95,11 +95,11 @@ export default function Dashboard() {
       {
         label: "Cryptographic Access Events",
         data: [2, 1, 8, 14, 22, 16, 28],
-        borderColor: "#06b6d4",
-        backgroundColor: "rgba(6, 182, 212, 0.15)",
+        borderColor: "#3b82f6",
+        backgroundColor: "rgba(59, 130, 246, 0.08)",
         fill: true,
         tension: 0.4,
-        pointBackgroundColor: "#06b6d4",
+        pointBackgroundColor: "#3b82f6",
       },
     ],
   };
@@ -127,7 +127,7 @@ export default function Dashboard() {
     datasets: [
       {
         data: [45, 30, 25],
-        backgroundColor: ["#f43f5e", "#06b6d4", "#10b981"],
+        backgroundColor: ["#e11d48", "#2563eb", "#059669"],
         borderWidth: 0,
       },
     ],
@@ -151,14 +151,14 @@ export default function Dashboard() {
       <div className="sv-dashboard-hero">
         <div className="sv-hero-content">
           <div className="sv-hero-badge">
-            <Shield className="w-3.5 h-3.5 text-cyan-400 mr-1.5" />
-            <span>SECUREVAULT SECURITY PROTOCOL 2.4 ACTIVE</span>
+            <Shield className="w-3.5 h-3.5 text-blue-400 mr-1.5" />
+            <span>SECUREVAULT ENTERPRISE TREASURY AUDIT SYSTEM</span>
           </div>
           <h1 className="sv-hero-title">
             Welcome back, {user?.fullName || user?.username}!
           </h1>
           <p className="sv-hero-desc">
-            You are operating under role <b>{user?.role}</b> with jurisdiction at{" "}
+            Operating under role <b>{user?.role}</b> with jurisdiction at{" "}
             <b>Branch #{user?.branchId || 1}</b>. All vault interactions are signed and hashed.
           </p>
         </div>
@@ -200,16 +200,16 @@ export default function Dashboard() {
         <div className="sv-stat-card">
           <div className="flex justify-between items-start">
             <span className="sv-stat-label">Audit Log Blocks</span>
-            <Layers className="w-5 h-5 text-cyan-400" />
+            <Layers className="w-5 h-5 text-blue-400" />
           </div>
-          <div className="sv-stat-val text-cyan-400">{stats.totalAuditLogs}</div>
+          <div className="sv-stat-val text-blue-400">{stats.totalAuditLogs}</div>
           <span className="sv-stat-desc">SHA-256 chained transactions</span>
         </div>
 
         <div className="sv-stat-card">
           <div className="flex justify-between items-start">
             <span className="sv-stat-label">Hash Chain Integrity</span>
-            <Fingerprint className="w-5 h-5 text-indigo-400" />
+            <Fingerprint className="w-5 h-5 text-blue-400" />
           </div>
           <div className="sv-stat-val text-emerald-400">
             {stats.isChainValid ? "VALID ✓" : "TAMPERED ⚠"}
@@ -224,7 +224,7 @@ export default function Dashboard() {
           <div className="sv-card-header">
             <div>
               <h3 className="sv-card-title flex items-center">
-                <TrendingUp className="w-4 h-4 text-cyan-400 mr-2" />
+                <TrendingUp className="w-4 h-4 text-blue-400 mr-2" />
                 Vault Access Ingress Trend
               </h3>
               <p className="sv-card-sub">Daily cryptographic unlock transactions</p>
@@ -239,7 +239,7 @@ export default function Dashboard() {
           <div className="sv-card-header">
             <div>
               <h3 className="sv-card-title flex items-center">
-                <Shield className="w-4 h-4 text-indigo-400 mr-2" />
+                <Shield className="w-4 h-4 text-blue-400 mr-2" />
                 Asset Protection Distribution
               </h3>
               <p className="sv-card-sub">Risk tier allocation</p>
@@ -257,7 +257,7 @@ export default function Dashboard() {
           className="sv-quick-action-card"
           onClick={() => navigate("/requests")}
         >
-          <div className="sv-quick-action-icon cyan">
+          <div className="sv-quick-action-icon blue">
             <KeyRound className="w-6 h-6" />
           </div>
           <div className="sv-quick-action-text">
@@ -299,7 +299,7 @@ export default function Dashboard() {
           className="sv-quick-action-card"
           onClick={() => navigate("/audit")}
         >
-          <div className="sv-quick-action-icon indigo">
+          <div className="sv-quick-action-icon blue">
             <Fingerprint className="w-6 h-6" />
           </div>
           <div className="sv-quick-action-text">
@@ -315,7 +315,7 @@ export default function Dashboard() {
         <div className="sv-card-header">
           <div>
             <h3 className="sv-card-title flex items-center">
-              <FileCheck className="w-4 h-4 text-cyan-400 mr-2" />
+              <FileCheck className="w-4 h-4 text-blue-400 mr-2" />
               Latest Immutable Audit Events
             </h3>
             <p className="sv-card-sub">SHA-256 blocks written to tamper-evident ledger</p>
@@ -343,7 +343,7 @@ export default function Dashboard() {
             <tbody>
               {recentLogs.map((log) => (
                 <tr key={log.id}>
-                  <td className="font-mono text-cyan-400 font-semibold">{log.logId}</td>
+                  <td className="font-mono text-blue-400 font-semibold">{log.logId}</td>
                   <td>
                     <span className="sv-event-badge">{log.eventType}</span>
                   </td>

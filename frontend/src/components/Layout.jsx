@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
-import { useAuth, PRESET_USERS } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import { requestApi } from "../api/services";
 import {
   Shield,
@@ -14,16 +14,24 @@ import {
   LogOut,
   Clock,
   RefreshCw,
-  Server,
   UserCheck,
+  Menu,
+  X,
+  ChevronRight,
 } from "lucide-react";
 
 export default function Layout({ children }) {
   const { user, logout, quickSwitchUser, backendOnline, apiMode, setApiMode } = useAuth();
   const [pendingCount, setPendingCount] = useState(0);
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Close mobile drawer whenever location changes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
 
   // Load pending request badge count
   const refreshBadge = async () => {
@@ -53,7 +61,6 @@ export default function Layout({ children }) {
       label: "Access Workflow",
       icon: KeyRound,
       badge: pendingCount > 0 ? pendingCount : null,
-      highlight: true,
     },
     { to: "/vaults", label: "Vaults", icon: Lock },
     { to: "/branches", label: "Branches", icon: Building2 },
@@ -64,19 +71,45 @@ export default function Layout({ children }) {
 
   return (
     <div className="sv-app-container">
+      {/* Mobile Header Bar */}
+      <header className="sv-mobile-topbar">
+        <div className="sv-mobile-brand">
+          <div className="sv-brand-icon">
+            <Shield className="w-5 h-5 text-blue-500" />
+          </div>
+          <span className="sv-brand-title">SecureVault</span>
+        </div>
+
+        <button
+          className="sv-mobile-menu-toggle"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Toggle navigation"
+        >
+          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </button>
+      </header>
+
+      {/* Mobile Drawer Overlay */}
+      {mobileMenuOpen && (
+        <div
+          className="sv-mobile-backdrop"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Sidebar Navigation */}
-      <aside className="sv-sidebar">
+      <aside className={`sv-sidebar ${mobileMenuOpen ? "mobile-open" : ""}`}>
         <div className="sv-brand">
           <div className="sv-brand-icon">
-            <Shield className="w-6 h-6 text-cyan-400" />
+            <Shield className="w-5 h-5 text-blue-500" />
           </div>
           <div className="sv-brand-text">
             <span className="sv-brand-title">SecureVault</span>
-            <span className="sv-brand-sub">Core Banking Security</span>
+            <span className="sv-brand-sub">Treasury Infrastructure</span>
           </div>
         </div>
 
-        {/* Current Active Persona */}
+        {/* Current Active User Profile Card */}
         <div className="sv-user-profile-card">
           <div className="sv-user-avatar">
             {user?.role === "BRANCH_MANAGER" ? "BM" : user?.role === "AUDITOR" ? "AU" : "OF"}
@@ -94,15 +127,15 @@ export default function Layout({ children }) {
 
         {/* Navigation Menu */}
         <nav className="sv-nav">
-          <div className="sv-nav-section-title">MAIN NAVIGATION</div>
+          <div className="sv-nav-section-title">PLATFORM</div>
           {navLinks.map((item) => {
             const Icon = item.icon;
-            const isActive = location.pathname === item.to;
             return (
               <NavLink
                 key={item.to}
                 to={item.to}
                 className={({ isActive }) => `sv-nav-item ${isActive ? "active" : ""}`}
+                onClick={() => setMobileMenuOpen(false)}
               >
                 <Icon className="sv-nav-icon" />
                 <span className="sv-nav-label">{item.label}</span>
@@ -112,11 +145,11 @@ export default function Layout({ children }) {
           })}
         </nav>
 
-        {/* Persona Quick Switcher for Easy Role Testing */}
+        {/* Test Persona Role Switcher */}
         <div className="sv-persona-switcher">
           <div className="sv-persona-header">
-            <UserCheck className="w-3.5 h-3.5 text-indigo-400" />
-            <span>TEST ROLES</span>
+            <UserCheck className="w-3.5 h-3.5 text-slate-400" />
+            <span>SWITCH TESTING PERSONA</span>
           </div>
           <div className="sv-persona-buttons">
             <button
@@ -143,16 +176,16 @@ export default function Layout({ children }) {
           </div>
         </div>
 
-        {/* Backend & Connectivity Status Footer */}
+        {/* Sidebar Footer */}
         <div className="sv-sidebar-footer">
           <div className="sv-backend-status-pill">
             <span className={`sv-status-dot ${backendOnline ? "online" : "mock"}`} />
             <div className="sv-status-details">
               <span className="sv-status-label">
-                {backendOnline ? "Spring Boot 8080" : "Mock Sandbox"}
+                {backendOnline ? "Spring Boot 8080" : "Sandbox Store"}
               </span>
               <span className="sv-status-sub">
-                {backendOnline ? "Connected Live" : "Contract v1.0.0"}
+                {backendOnline ? "Online Live" : "Contract v1.0.0"}
               </span>
             </div>
             <select
@@ -178,8 +211,8 @@ export default function Layout({ children }) {
       <div className="sv-main-wrapper">
         <header className="sv-topbar">
           <div className="sv-topbar-breadcrumb">
-            <span className="sv-breadcrumb-root">SecureVault Core</span>
-            <span className="sv-breadcrumb-separator">/</span>
+            <span className="sv-breadcrumb-root">SecureVault</span>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
             <span className="sv-breadcrumb-current">
               {navLinks.find((l) => l.to === location.pathname)?.label || "Overview"}
             </span>
@@ -187,7 +220,7 @@ export default function Layout({ children }) {
 
           <div className="sv-topbar-actions">
             <div className="sv-time-display">
-              <Clock className="w-4 h-4 text-slate-400" />
+              <Clock className="w-3.5 h-3.5 text-slate-400" />
               <span>{currentTime}</span>
             </div>
 
@@ -196,18 +229,20 @@ export default function Layout({ children }) {
               onClick={refreshBadge}
               title="Refresh Queue and Backend Connectivity"
             >
-              <RefreshCw className="w-3.5 h-3.5 text-cyan-400" />
+              <RefreshCw className="w-3.5 h-3.5 text-slate-300" />
               <span>Sync</span>
             </button>
 
             <div className="sv-security-level-pill">
               <Shield className="w-3.5 h-3.5 text-emerald-400" />
-              <span>SHA-256 Chain Locked</span>
+              <span>Audit Chain Active</span>
             </div>
           </div>
         </header>
 
-        <main className="sv-content-container">{children}</main>
+        <main className="sv-content-container">
+          <div className="sv-constrained-layout">{children}</div>
+        </main>
       </div>
     </div>
   );

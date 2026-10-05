@@ -189,14 +189,14 @@ export default function Audit() {
         <div className="sv-card-header">
           <div>
             <h3 className="sv-card-title flex items-center">
-              <Layers className="w-5 h-5 text-cyan-400 mr-2" />
+              <Layers className="w-5 h-5 text-blue-400 mr-2" />
               Cryptographic Audit Chain Explorer
             </h3>
             <p className="sv-card-sub">
               Sequential ledger entries where each block contains the cryptographic digest of its predecessor
             </p>
           </div>
-          <span className="sv-badge sv-badge-cyan">{logs.length} Blocks Sequenced</span>
+          <span className="sv-badge sv-badge-blue">{logs.length} Blocks Sequenced</span>
         </div>
 
         <div className="sv-blockchain-timeline">
@@ -211,7 +211,7 @@ export default function Audit() {
                   <div className="sv-block-connector">
                     <div className="sv-connector-line" />
                     <div className="sv-connector-arrow">
-                      <ArrowDown className="w-4 h-4 text-cyan-400" />
+                      <ArrowDown className="w-4 h-4 text-slate-400" />
                       <span className="sv-connector-label font-mono">
                         prev_hash: {log.previousHash.substring(0, 10)}...
                       </span>
@@ -226,7 +226,7 @@ export default function Audit() {
                       <div className="sv-block-index-pill font-mono">
                         BLOCK #{index + 1}
                       </div>
-                      <span className="sv-block-log-id font-mono ml-3 text-cyan-300">
+                      <span className="sv-block-log-id font-mono ml-3 text-blue-400">
                         {log.logId}
                       </span>
                     </div>
@@ -272,8 +272,8 @@ export default function Audit() {
                         </span>
                       </div>
                       <div className="sv-hash-display-row mt-1">
-                        <span className="sv-hash-display-k text-cyan-400">Current Hash:</span>
-                        <span className="sv-hash-display-v font-mono text-xs text-cyan-300 font-semibold break-all">
+                        <span className="sv-hash-display-k text-blue-400">Current Hash:</span>
+                        <span className="sv-hash-display-v font-mono text-xs text-slate-200 font-semibold break-all">
                           {log.currentHash}
                         </span>
                       </div>

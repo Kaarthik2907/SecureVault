@@ -305,10 +305,10 @@ export default function Requests() {
       {activeTab === "submit" && (
         <div className="sv-workflow-grid">
           {/* Submission Form Card */}
-          <div className="sv-card sv-card-glow">
+          <div className="sv-card">
             <div className="sv-card-header">
               <div className="sv-card-icon-badge">
-                <Send className="w-5 h-5 text-cyan-400" />
+                <Send className="w-5 h-5 text-blue-400" />
               </div>
               <div>
                 <h3 className="sv-card-title">New Vault Access Request</h3>
@@ -500,9 +500,9 @@ export default function Requests() {
           <div className="sv-queue-header">
             <div>
               <h3 className="sv-card-title flex items-center">
-                <UserCheck className="w-5 h-5 text-cyan-400 mr-2" />
+                <UserCheck className="w-5 h-5 text-blue-400 mr-2" />
                 Manager Approval Queue
-                <span className="sv-badge sv-badge-cyan ml-2">
+                <span className="sv-badge sv-badge-blue ml-2">
                   {pendingRequests.length} Pending
                 </span>
               </h3>
@@ -544,7 +544,7 @@ export default function Requests() {
 
                     <div className="sv-queue-card-body">
                       <div className="sv-queue-vault-info">
-                        <Lock className="w-4 h-4 text-cyan-400 mr-2" />
+                        <Lock className="w-4 h-4 text-blue-400 mr-2" />
                         <b>{targetVault?.vaultCode || `Vault #${req.vaultId}`}</b>
                         <span className="sv-vault-subname">
                           {targetVault?.name || "Branch Bullion Vault"}
@@ -707,7 +707,7 @@ export default function Requests() {
                 {unlockSuccess.auditLog && (
                   <div className="sv-audit-write-card">
                     <div className="sv-audit-card-title">
-                      <Shield className="w-4 h-4 text-cyan-400 mr-2" />
+                      <Shield className="w-4 h-4 text-blue-400 mr-2" />
                       <span>IMMUTABLE AUDIT LOG WRITTEN (SHA-256 HASH CHAIN)</span>
                     </div>
 
@@ -718,7 +718,7 @@ export default function Requests() {
                       </div>
                       <div className="sv-hash-row">
                         <span className="sv-hash-k">Event Type:</span>
-                        <span className="sv-hash-v font-mono text-cyan-300">
+                        <span className="sv-hash-v font-mono text-blue-400">
                           {unlockSuccess.auditLog.eventType}
                         </span>
                       </div>
@@ -912,7 +912,7 @@ export default function Requests() {
                     <div className="sv-generated-code-box">
                       <span className="sv-code-label">Cryptographic Authorization Code:</span>
                       <div className="sv-code-copy-row">
-                        <span className="font-mono text-lg text-cyan-300 font-bold">
+                        <span className="font-mono text-lg text-blue-300 font-bold">
                           {approvalResult.authorizationCode}
                         </span>
                         <button

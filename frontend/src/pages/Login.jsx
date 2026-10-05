@@ -5,10 +5,8 @@ import {
   Shield,
   Lock,
   User,
-  KeyRound,
   ArrowRight,
   AlertTriangle,
-  Server,
   CheckCircle2,
 } from "lucide-react";
 
@@ -17,7 +15,6 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-
   const [selectedPreset, setSelectedPreset] = useState("");
 
   const { login, backendOnline, apiMode, setApiMode } = useAuth();
@@ -35,7 +32,7 @@ export default function Login() {
       setError(
         err.response?.data?.message ||
           err.message ||
-          "Authentication failed. Please verify credentials or connection."
+          "Authentication failed. Please verify your credentials or server status."
       );
     } finally {
       setBusy(false);
@@ -50,17 +47,15 @@ export default function Login() {
 
   return (
     <div className="sv-login-page">
-      <div className="sv-login-glow" />
-
       <div className="sv-login-container">
-        {/* Brand Banner */}
+        {/* Brand Lockup */}
         <div className="sv-login-header">
           <div className="sv-login-logo">
-            <Shield className="w-10 h-10 text-cyan-400" />
+            <Shield className="w-7 h-7 text-blue-500" />
           </div>
           <h1 className="sv-login-title">SecureVault</h1>
           <p className="sv-login-subtitle">
-            Core Banking Vault Access & SHA-256 Cryptographic Audit Ledger
+            Enterprise Vault Access & Cryptographic Ledger Portal
           </p>
         </div>
 
@@ -69,36 +64,38 @@ export default function Login() {
           <form onSubmit={handleSubmit} className="sv-form">
             {error && (
               <div className="sv-alert sv-alert-error">
-                <AlertTriangle className="w-5 h-5 flex-shrink-0" />
+                <AlertTriangle className="w-4 h-4 flex-shrink-0" />
                 <div className="sv-alert-content">{error}</div>
               </div>
             )}
 
             <div className="sv-form-group">
-              <label className="sv-label">Employee Username</label>
+              <label className="sv-label">Username</label>
               <div className="sv-input-with-icon">
                 <User className="sv-field-icon" />
                 <input
                   type="text"
                   className="sv-input with-icon"
-                  placeholder="e.g. johndoe"
+                  placeholder="Enter username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                  autoComplete="username"
                   required
                 />
               </div>
             </div>
 
             <div className="sv-form-group">
-              <label className="sv-label">Security Password</label>
+              <label className="sv-label">Password</label>
               <div className="sv-input-with-icon">
                 <Lock className="sv-field-icon" />
                 <input
                   type="password"
                   className="sv-input with-icon"
-                  placeholder="••••••••••••"
+                  placeholder="Enter password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
                   required
                 />
               </div>
@@ -110,22 +107,22 @@ export default function Login() {
               className="sv-btn sv-btn-primary sv-btn-block sv-btn-lg"
             >
               {busy ? (
-                <span>Authenticating JWT Bearer...</span>
+                <span>Authenticating Session...</span>
               ) : (
                 <>
-                  <span>Sign In to Terminal</span>
+                  <span>Sign In to Dashboard</span>
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </>
               )}
             </button>
           </form>
 
-          {/* Quick Demo Personas Bar */}
+          {/* Clean Persona Quick Selection */}
           <div className="sv-login-presets">
             <div className="sv-presets-header">
               <span className="sv-presets-label">QUICK PERSONA LOGIN (ONE-CLICK FILL)</span>
               {selectedPreset && (
-                <span className="sv-presets-selected-tag">Selected: @{selectedPreset}</span>
+                <span className="sv-presets-selected-tag">Active: @{selectedPreset}</span>
               )}
             </div>
             <div className="sv-presets-grid">
@@ -150,18 +147,17 @@ export default function Login() {
           </div>
         </div>
 
-        {/* Backend & Security Status Footer */}
+        {/* Footer info */}
         <div className="sv-login-footer">
           <div className="sv-login-status-pill">
             <span className={`sv-status-dot ${backendOnline ? "online" : "mock"}`} />
             <span>
               Backend:{" "}
-              <b>{backendOnline ? "Spring Boot 8080 Live" : "Local Contract Sandbox"}</b>
+              <b>{backendOnline ? "Spring Boot 8080 Live" : "Sandbox Store"}</b>
             </span>
           </div>
 
           <div className="sv-login-mode-toggle">
-            <span className="text-xs text-slate-400">Mode:</span>
             <select
               className="sv-mode-select-sm"
               value={apiMode}
