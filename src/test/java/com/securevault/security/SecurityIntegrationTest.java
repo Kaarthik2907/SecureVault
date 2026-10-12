@@ -76,9 +76,9 @@ class SecurityIntegrationTest {
     void testSecuredEndpointWithValidToken() throws Exception {
         String token = jwtUtil.generateToken("johndoe", "OFFICER", 101L, 1L);
 
-        // Without a controller for vault-requests yet, passing security filter returns 404 (Resource not found), NOT 401 Unauthorized
+        // With AccessRequestController implemented, passing security filter returns 200 OK, NOT 401 Unauthorized
         mockMvc.perform(get("/api/v1/vault-requests/pending")
                         .header("Authorization", "Bearer " + token))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isOk());
     }
 }
