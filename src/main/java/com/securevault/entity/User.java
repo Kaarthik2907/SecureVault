@@ -159,6 +159,16 @@ public class User implements UserDetails {
         this.enabled = enabled;
     }
 
+    @JsonProperty("isActive")
+    public boolean isActive() {
+        return enabled;
+    }
+
+    @JsonProperty("isActive")
+    public void setActive(boolean active) {
+        this.enabled = active;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
