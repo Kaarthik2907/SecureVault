@@ -30,7 +30,7 @@ api.interceptors.response.use(
     notifyBackendStatus(true);
     return response;
   },
-  (error) => {
+  async (error) => {
     if (error.code === "ERR_NETWORK" || error.code === "ECONNREFUSED") {
       notifyBackendStatus(false);
     }
@@ -42,6 +42,27 @@ api.interceptors.response.use(
         localStorage.removeItem("securevault_user");
       }
     }
+
+    // Intercept Axios requests for /api/v1/audit endpoints when backend is offline/404
+    const url = error.config?.url || "";
+    const isAuditUrl = url.includes("/audit");
+    const isUnreachableOrMissing =
+      error.code === "ERR_NETWORK" ||
+      error.code === "ECONNREFUSED" ||
+      !error.response ||
+      error.response.status === 404 ||
+      error.response.status === 501;
+
+    if (isAuditUrl && (activeMode !== "live" || isUnreachableOrMissing)) {
+      if (url.includes("/verify")) {
+        const data = await mockEngine.verifyAuditChain();
+        return { data, status: 200, statusText: "OK", headers: {}, config: error.config };
+      } else {
+        const data = await mockEngine.getAuditLogs(error.config.params);
+        return { data, status: 200, statusText: "OK", headers: {}, config: error.config };
+      }
+    }
+
     return Promise.reject(error);
   }
 );

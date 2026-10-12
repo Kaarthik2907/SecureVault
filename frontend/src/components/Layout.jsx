@@ -18,6 +18,7 @@ import {
   Menu,
   X,
   ChevronRight,
+  ShieldCheck,
 } from "lucide-react";
 
 export default function Layout({ children }) {
@@ -65,8 +66,9 @@ export default function Layout({ children }) {
     { to: "/vaults", label: "Vaults", icon: Lock },
     { to: "/branches", label: "Branches", icon: Building2 },
     { to: "/employees", label: "Employees", icon: Users },
+    { to: "/audit", label: "Audit Logs", icon: FileText },
+    { to: "/chain-verification", label: "Chain Verification", icon: ShieldCheck },
     { to: "/monitoring", label: "Monitoring", icon: Activity },
-    { to: "/audit", label: "Chain Verification", icon: FileText },
   ];
 
   return (

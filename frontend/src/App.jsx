@@ -1,3 +1,32 @@
-import {Routes,Route} from "react-router-dom";import ProtectedRoute from "./components/ProtectedRoute";import Layout from "./components/Layout";import Login from "./pages/Login";import Dashboard from "./pages/Dashboard";import Branches from "./pages/Branches";import Employees from "./pages/Employees";import Vaults from "./pages/Vaults";import Requests from "./pages/Requests";import Monitoring from "./pages/Monitoring";import Audit from "./pages/Audit";
-const Page=({children})=><ProtectedRoute><Layout>{children}</Layout></ProtectedRoute>;
-export default()=> <Routes><Route path="/login" element={<Login/>}/><Route path="/" element={<Page><Dashboard/></Page>}/><Route path="/branches" element={<Page><Branches/></Page>}/><Route path="/employees" element={<Page><Employees/></Page>}/><Route path="/vaults" element={<Page><Vaults/></Page>}/><Route path="/requests" element={<Page><Requests/></Page>}/><Route path="/monitoring" element={<Page><Monitoring/></Page>}/><Route path="/audit" element={<Page><Audit/></Page>}/></Routes>;
+import { Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Layout from "./components/Layout";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import Branches from "./pages/Branches";
+import Employees from "./pages/Employees";
+import Vaults from "./pages/Vaults";
+import Requests from "./pages/Requests";
+import Monitoring from "./pages/Monitoring";
+import Audit from "./pages/Audit";
+import ChainVerification from "./pages/ChainVerification";
+
+const Page = ({ children }) => (
+  <ProtectedRoute>
+    <Layout>{children}</Layout>
+  </ProtectedRoute>
+);
+
+export default () => (
+  <Routes>
+    <Route path="/login" element={<Login />} />
+    <Route path="/" element={<Page><Dashboard /></Page>} />
+    <Route path="/branches" element={<Page><Branches /></Page>} />
+    <Route path="/employees" element={<Page><Employees /></Page>} />
+    <Route path="/vaults" element={<Page><Vaults /></Page>} />
+    <Route path="/requests" element={<Page><Requests /></Page>} />
+    <Route path="/monitoring" element={<Page><Monitoring /></Page>} />
+    <Route path="/audit" element={<Page><Audit /></Page>} />
+    <Route path="/chain-verification" element={<Page><ChainVerification /></Page>} />
+  </Routes>
+);

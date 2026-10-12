@@ -162,11 +162,17 @@ export const auditApi = {
       () => mockEngine.verifyAuditChain(),
       "audit/verify"
     ),
-  logs: async () =>
+  getLogs: async (params) =>
     callApi(
-      () => api.get("/audit/logs"),
-      () => mockEngine.getAuditLogs(),
-      "audit/logs"
+      () => api.get("/audit", { params }),
+      () => mockEngine.getAuditLogs(params),
+      "audit"
+    ),
+  logs: async (params) =>
+    callApi(
+      () => api.get("/audit", { params }),
+      () => mockEngine.getAuditLogs(params),
+      "audit"
     ),
   simulateTamper: async (id) => mockEngine.simulateTamper(id),
   reset: async () => mockEngine.reset(),

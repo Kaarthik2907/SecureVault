@@ -7,7 +7,7 @@ const STORAGE_KEYS = {
   VAULTS: "securevault_mock_vaults",
   REQUESTS: "securevault_mock_requests",
   AUDIT_LOGS: "securevault_mock_audit_logs",
-  INIT_FLAG: "securevault_mock_initialized_v2",
+  INIT_FLAG: "securevault_mock_initialized_v3",
 };
 
 // SHA-256 cryptographic utility using Web Crypto API
@@ -187,47 +187,283 @@ const SEED_REQUESTS = [
 const SEED_AUDIT_LOGS = [
   {
     id: 1,
-    logId: "LOG-20260826-0001",
+    logId: "LOG-20260824-0001",
     eventType: "SYSTEM_INITIALIZATION",
     employeeId: 102,
+    requesterId: 102,
+    approverId: 102,
     vaultId: null,
-    actionDetails: "SecureVault core schema and cryptographic audit chain initialized.",
-    timestamp: "2026-08-26T09:00:00",
+    action: "SYSTEM_INIT",
+    actionDetails: "SecureVault cryptographic ledger initialized with genesis block.",
+    timestamp: "2026-08-24T08:00:00",
     previousHash: "0000000000000000000000000000000000000000000000000000000000000000",
-    currentHash: "065b75f8f5bcfae6ff8b8cbdf4eaee1e6a4b1ca7067d0269f8cbb8fa4a67e108",
+    currentHash: "fe2a86804d00f5d0329c91f4a1fb0150c676fe1b5d59812f5d4146f5bcf7c422",
   },
   {
     id: 2,
-    logId: "LOG-20260826-0002",
-    eventType: "VAULT_ACCESS_REQUESTED",
+    logId: "LOG-20260824-0002",
+    eventType: "VAULT_ACCESS_REQUEST_CREATED",
     employeeId: 101,
+    requesterId: 101,
+    approverId: null,
     vaultId: 501,
-    actionDetails: "Request #1001 submitted by johndoe for Vault VLT-MUM-A1",
-    timestamp: "2026-08-26T10:15:00",
-    previousHash: "065b75f8f5bcfae6ff8b8cbdf4eaee1e6a4b1ca7067d0269f8cbb8fa4a67e108",
-    currentHash: "4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b",
+    action: "REQUEST_CREATED",
+    actionDetails: "Request #998 submitted by johndoe for Vault VLT-MUM-A1 (Reason: Currency counting)",
+    timestamp: "2026-08-24T09:15:00",
+    previousHash: "fe2a86804d00f5d0329c91f4a1fb0150c676fe1b5d59812f5d4146f5bcf7c422",
+    currentHash: "330b2fd269195025bc820cfc54718c34a9c8bf98909d014045c535c05df13f07",
   },
   {
     id: 3,
-    logId: "LOG-20260826-0003",
+    logId: "LOG-20260824-0003",
     eventType: "VAULT_ACCESS_APPROVED",
     employeeId: 102,
+    requesterId: 101,
+    approverId: 102,
     vaultId: 501,
-    actionDetails: "Request #1001 approved by sarahsmith. Auth Code: AUTH-7F89B2-2026 generated.",
-    timestamp: "2026-08-26T10:25:00",
-    previousHash: "4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b",
-    currentHash: "8b3c94d1f2e5a7b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d6e8f0a2b4",
+    action: "ACCESS_APPROVED",
+    actionDetails: "Request #998 approved by sarahsmith. Auth Code: AUTH-3B12A1-2026",
+    timestamp: "2026-08-24T09:25:00",
+    previousHash: "330b2fd269195025bc820cfc54718c34a9c8bf98909d014045c535c05df13f07",
+    currentHash: "87c9ac9fd5f3f147dcaebd548c5c5364558e5c836030efd4ec2297299720547e",
   },
   {
     id: 4,
-    logId: "LOG-20260826-0004",
-    eventType: "VAULT_ACCESS_REQUESTED",
+    logId: "LOG-20260824-0004",
+    eventType: "VAULT_UNLOCKED",
     employeeId: 101,
+    requesterId: 101,
+    approverId: 102,
+    vaultId: 501,
+    action: "VAULT_UNLOCKED",
+    actionDetails: "Physical Vault #501 unlocked with Auth Code AUTH-3B12A1-2026.",
+    timestamp: "2026-08-24T09:30:00",
+    previousHash: "87c9ac9fd5f3f147dcaebd548c5c5364558e5c836030efd4ec2297299720547e",
+    currentHash: "1ea41ff37b6af75eb80f279b61e3f33a06080b5e28ea2cfe7cd68157782accfa",
+  },
+  {
+    id: 5,
+    logId: "LOG-20260824-0005",
+    eventType: "VAULT_LOCKED",
+    employeeId: 101,
+    requesterId: 101,
+    approverId: 102,
+    vaultId: 501,
+    action: "VAULT_LOCKED",
+    actionDetails: "Physical Vault #501 locked and sealed after inspection.",
+    timestamp: "2026-08-24T10:30:00",
+    previousHash: "1ea41ff37b6af75eb80f279b61e3f33a06080b5e28ea2cfe7cd68157782accfa",
+    currentHash: "8f17d8d330f8eb2c6204321fdc6168c918bdd34ebbc5ee9c1f934cfa9dac0651",
+  },
+  {
+    id: 6,
+    logId: "LOG-20260825-0001",
+    eventType: "VAULT_ACCESS_REQUEST_CREATED",
+    employeeId: 105,
+    requesterId: 105,
+    approverId: null,
+    vaultId: 504,
+    action: "REQUEST_CREATED",
+    actionDetails: "Request #999 submitted by alexchen for Vault VLT-BLR-01 (Reason: Hardware HSM maintenance)",
+    timestamp: "2026-08-25T11:00:00",
+    previousHash: "8f17d8d330f8eb2c6204321fdc6168c918bdd34ebbc5ee9c1f934cfa9dac0651",
+    currentHash: "e348689040f2cc1a765fd53de0694a93cd6bfe02a48255eb189d4b65b3468369",
+  },
+  {
+    id: 7,
+    logId: "LOG-20260825-0002",
+    eventType: "VAULT_ACCESS_REJECTED",
+    employeeId: 104,
+    requesterId: 105,
+    approverId: 104,
+    vaultId: 504,
+    action: "ACCESS_REJECTED",
+    actionDetails: "Request #999 rejected by priyasharma (Reason: Maintenance window reschedule required).",
+    timestamp: "2026-08-25T11:15:00",
+    previousHash: "e348689040f2cc1a765fd53de0694a93cd6bfe02a48255eb189d4b65b3468369",
+    currentHash: "ac5d868b8a31bff45c54ab13b6ec2e77ca2b0f95d6a9cefb9134677973fab3ab",
+  },
+  {
+    id: 8,
+    logId: "LOG-20260825-0003",
+    eventType: "VAULT_ACCESS_REQUEST_CREATED",
+    employeeId: 104,
+    requesterId: 104,
+    approverId: null,
+    vaultId: 503,
+    action: "REQUEST_CREATED",
+    actionDetails: "Request #1000 submitted by priyasharma for Vault VLT-DEL-01 (Reason: Inter-branch bullion transfer)",
+    timestamp: "2026-08-25T14:00:00",
+    previousHash: "ac5d868b8a31bff45c54ab13b6ec2e77ca2b0f95d6a9cefb9134677973fab3ab",
+    currentHash: "ea965659db64e522b74b66911ea404bd280da195213a119c3ebd9773c792373e",
+  },
+  {
+    id: 9,
+    logId: "LOG-20260825-0004",
+    eventType: "VAULT_ACCESS_APPROVED",
+    employeeId: 102,
+    requesterId: 104,
+    approverId: 102,
+    vaultId: 503,
+    action: "ACCESS_APPROVED",
+    actionDetails: "Request #1000 approved by sarahsmith. Auth Code: AUTH-8C91D4-2026",
+    timestamp: "2026-08-25T14:10:00",
+    previousHash: "ea965659db64e522b74b66911ea404bd280da195213a119c3ebd9773c792373e",
+    currentHash: "1d993f5bd565711d383b386f451f1246250c9e013e581cbe75123b4bf10da77c",
+  },
+  {
+    id: 10,
+    logId: "LOG-20260825-0005",
+    eventType: "VAULT_UNLOCKED",
+    employeeId: 104,
+    requesterId: 104,
+    approverId: 102,
+    vaultId: 503,
+    action: "VAULT_UNLOCKED",
+    actionDetails: "Physical Vault #503 unlocked by priyasharma with Auth Code AUTH-8C91D4-2026.",
+    timestamp: "2026-08-25T14:20:00",
+    previousHash: "1d993f5bd565711d383b386f451f1246250c9e013e581cbe75123b4bf10da77c",
+    currentHash: "bc9436eb033f670dac05368b29b27c8153f85001e5617c354a89dd0127fb84ed",
+  },
+  {
+    id: 11,
+    logId: "LOG-20260825-0006",
+    eventType: "VAULT_LOCKED",
+    employeeId: 104,
+    requesterId: 104,
+    approverId: 102,
+    vaultId: 503,
+    action: "VAULT_LOCKED",
+    actionDetails: "Physical Vault #503 locked and secured.",
+    timestamp: "2026-08-25T15:50:00",
+    previousHash: "bc9436eb033f670dac05368b29b27c8153f85001e5617c354a89dd0127fb84ed",
+    currentHash: "a1d376548f166aa1864c738a6f7fe5bf368caf28c589a20eeb2677cea87eed05",
+  },
+  {
+    id: 12,
+    logId: "LOG-20260826-0001",
+    eventType: "VAULT_ACCESS_REQUEST_CREATED",
+    employeeId: 101,
+    requesterId: 101,
+    approverId: null,
+    vaultId: 501,
+    action: "REQUEST_CREATED",
+    actionDetails: "Request #1001 submitted by johndoe for Vault VLT-MUM-A1 (Reason: Quarterly physical bullion audit)",
+    timestamp: "2026-08-26T10:15:00",
+    previousHash: "a1d376548f166aa1864c738a6f7fe5bf368caf28c589a20eeb2677cea87eed05",
+    currentHash: "b339c21d1510c766dcd1b72d327e62b7fadf78359230bdb2808d35abe72b3ff9",
+  },
+  {
+    id: 13,
+    logId: "LOG-20260826-0002",
+    eventType: "VAULT_ACCESS_APPROVED",
+    employeeId: 102,
+    requesterId: 101,
+    approverId: 102,
+    vaultId: 501,
+    action: "ACCESS_APPROVED",
+    actionDetails: "Request #1001 approved by sarahsmith. Auth Code: AUTH-7F89B2-2026",
+    timestamp: "2026-08-26T10:25:00",
+    previousHash: "b339c21d1510c766dcd1b72d327e62b7fadf78359230bdb2808d35abe72b3ff9",
+    currentHash: "1d69721df503a2f30708a7f7cf7b8f11a75df681e47ae291b0cf28d8c24e647d",
+  },
+  {
+    id: 14,
+    logId: "LOG-20260826-0003",
+    eventType: "VAULT_UNLOCKED",
+    employeeId: 101,
+    requesterId: 101,
+    approverId: 102,
+    vaultId: 501,
+    action: "VAULT_UNLOCKED",
+    actionDetails: "Physical Vault #501 unlocked with Auth Code AUTH-7F89B2-2026.",
+    timestamp: "2026-08-26T10:30:00",
+    previousHash: "1d69721df503a2f30708a7f7cf7b8f11a75df681e47ae291b0cf28d8c24e647d",
+    currentHash: "74a13421e2749625a37b7d1c189ca6124f4b31bc549f850fcf2178f44a2ecd41",
+  },
+  {
+    id: 15,
+    logId: "LOG-20260826-0004",
+    eventType: "VAULT_LOCKED",
+    employeeId: 101,
+    requesterId: 101,
+    approverId: 102,
+    vaultId: 501,
+    action: "VAULT_LOCKED",
+    actionDetails: "Physical Vault #501 locked and secured.",
+    timestamp: "2026-08-26T11:35:00",
+    previousHash: "74a13421e2749625a37b7d1c189ca6124f4b31bc549f850fcf2178f44a2ecd41",
+    currentHash: "1a5775a035a7d2017e86332d6e90a98a5669e8d142138ae13a89ce7cb03064cd",
+  },
+  {
+    id: 16,
+    logId: "LOG-20260826-0005",
+    eventType: "VAULT_ACCESS_REQUEST_CREATED",
+    employeeId: 101,
+    requesterId: 101,
+    approverId: null,
     vaultId: 502,
-    actionDetails: "Request #1002 submitted by johndoe for Vault VLT-MUM-B2",
+    action: "REQUEST_CREATED",
+    actionDetails: "Request #1002 submitted by johndoe for Vault VLT-MUM-B2 (Reason: Routine locker inspection)",
     timestamp: "2026-08-26T14:30:00",
-    previousHash: "8b3c94d1f2e5a7b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d6e8f0a2b4",
-    currentHash: "2e1f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d6e8f0a2b4c6d8e0f2a4b6c8d0e2f",
+    previousHash: "1a5775a035a7d2017e86332d6e90a98a5669e8d142138ae13a89ce7cb03064cd",
+    currentHash: "750c1fce6f7b8c13b8b108d132818ca350dcb7786658aa4dee0dc155ca85595d",
+  },
+  {
+    id: 17,
+    logId: "LOG-20260827-0001",
+    eventType: "VAULT_ACCESS_REQUEST_CREATED",
+    employeeId: 104,
+    requesterId: 104,
+    approverId: null,
+    vaultId: 503,
+    action: "REQUEST_CREATED",
+    actionDetails: "Request #1003 submitted by priyasharma for Vault VLT-DEL-01 (Reason: Emergency cash reserve inspection)",
+    timestamp: "2026-08-27T09:00:00",
+    previousHash: "750c1fce6f7b8c13b8b108d132818ca350dcb7786658aa4dee0dc155ca85595d",
+    currentHash: "f558199f1564572129355a8c7107f0b4617a02a762f87409a2f3acb8b148fdfd",
+  },
+  {
+    id: 18,
+    logId: "LOG-20260827-0002",
+    eventType: "VAULT_ACCESS_APPROVED",
+    employeeId: 103,
+    requesterId: 104,
+    approverId: 103,
+    vaultId: 503,
+    action: "ACCESS_APPROVED",
+    actionDetails: "Request #1003 authorized by davidkumar (Auditor override). Auth Code: AUTH-9E44F1-2026",
+    timestamp: "2026-08-27T09:10:00",
+    previousHash: "f558199f1564572129355a8c7107f0b4617a02a762f87409a2f3acb8b148fdfd",
+    currentHash: "e68666e3dce69198d6c589121a962e4921d8b0939180d21b6ae3f8f0c5c24130",
+  },
+  {
+    id: 19,
+    logId: "LOG-20260827-0003",
+    eventType: "VAULT_UNLOCKED",
+    employeeId: 104,
+    requesterId: 104,
+    approverId: 103,
+    vaultId: 503,
+    action: "VAULT_UNLOCKED",
+    actionDetails: "Physical Vault #503 unlocked per Auditor authorization.",
+    timestamp: "2026-08-27T09:15:00",
+    previousHash: "e68666e3dce69198d6c589121a962e4921d8b0939180d21b6ae3f8f0c5c24130",
+    currentHash: "529771670e8571bccfe564381d15a122023bfcf92cbf259d7eac79612ccdfb99",
+  },
+  {
+    id: 20,
+    logId: "LOG-20260827-0004",
+    eventType: "VAULT_LOCKED",
+    employeeId: 104,
+    requesterId: 104,
+    approverId: 103,
+    vaultId: 503,
+    action: "VAULT_LOCKED",
+    actionDetails: "Physical Vault #503 locked. Session concluded.",
+    timestamp: "2026-08-27T10:45:00",
+    previousHash: "529771670e8571bccfe564381d15a122023bfcf92cbf259d7eac79612ccdfb99",
+    currentHash: "9945832693c06ab28771a859e9bd19609a5eba6753caf2a4d18ee8d51d1d3192",
   },
 ];
 
@@ -264,7 +500,7 @@ export async function computeLogHash(previousHash, eventType, employeeId, vaultI
 }
 
 // Append new audit log to chain
-export async function appendAuditLog(eventType, employeeId, vaultId, actionDetails) {
+export async function appendAuditLog(eventType, employeeId, vaultId, actionDetails, extra = {}) {
   initMockStorage();
   const logs = getStorage(STORAGE_KEYS.AUDIT_LOGS, SEED_AUDIT_LOGS);
   const lastLog = logs[logs.length - 1];
@@ -282,7 +518,10 @@ export async function appendAuditLog(eventType, employeeId, vaultId, actionDetai
     logId,
     eventType,
     employeeId,
+    requesterId: extra.requesterId || employeeId,
+    approverId: extra.approverId || null,
     vaultId,
+    action: extra.action || eventType,
     actionDetails,
     timestamp,
     previousHash,
@@ -615,9 +854,39 @@ export const mockEngine = {
   },
 
   // Audit Logs & Hash Chain Verification
-  async getAuditLogs() {
+  async getAuditLogs(params = {}) {
     initMockStorage();
-    return getStorage(STORAGE_KEYS.AUDIT_LOGS, SEED_AUDIT_LOGS);
+    let logs = getStorage(STORAGE_KEYS.AUDIT_LOGS, SEED_AUDIT_LOGS);
+
+    if (params) {
+      if (params.vaultId && params.vaultId !== "ALL") {
+        logs = logs.filter((l) => Number(l.vaultId) === Number(params.vaultId));
+      }
+      if (params.date) {
+        logs = logs.filter((l) => l.timestamp && l.timestamp.startsWith(params.date));
+      }
+      if (params.action && params.action !== "ALL") {
+        logs = logs.filter(
+          (l) => l.action === params.action || l.eventType === params.action
+        );
+      }
+      if (params.search) {
+        const q = String(params.search).toLowerCase();
+        logs = logs.filter(
+          (l) =>
+            (l.logId && l.logId.toLowerCase().includes(q)) ||
+            (l.actionDetails && l.actionDetails.toLowerCase().includes(q)) ||
+            (l.action && l.action.toLowerCase().includes(q)) ||
+            (l.eventType && l.eventType.toLowerCase().includes(q)) ||
+            String(l.employeeId).includes(q) ||
+            String(l.requesterId).includes(q) ||
+            String(l.approverId).includes(q) ||
+            String(l.vaultId).includes(q)
+        );
+      }
+    }
+
+    return logs;
   },
 
   async verifyAuditChain() {
@@ -654,7 +923,7 @@ export const mockEngine = {
         }
       }
 
-      // Check current hash integrity
+      // Check current hash integrity against recalculated canonical SHA-256
       const expectedCurrentHash = await computeLogHash(
         log.previousHash,
         log.eventType,
@@ -664,8 +933,7 @@ export const mockEngine = {
         log.actionDetails
       );
 
-      // In initial mock data seeded before crypto, verify if actualHash equals currentHash
-      if (log.currentHash !== expectedCurrentHash && !log.currentHash.match(/^[0-9a-f]{64}$/)) {
+      if (log.currentHash !== expectedCurrentHash) {
         return {
           isChainValid: false,
           totalRecordsChecked: i,
@@ -691,7 +959,8 @@ export const mockEngine = {
   async simulateTamper(logId) {
     initMockStorage();
     const logs = getStorage(STORAGE_KEYS.AUDIT_LOGS, SEED_AUDIT_LOGS);
-    const idx = logs.findIndex((l) => Number(l.id) === Number(logId));
+    const targetId = logId ? Number(logId) : 14;
+    const idx = logs.findIndex((l) => Number(l.id) === targetId);
     if (idx >= 0) {
       logs[idx].actionDetails += " [MALICIOUS UNAUTHORIZED MODIFICATION]";
       setStorage(STORAGE_KEYS.AUDIT_LOGS, logs);

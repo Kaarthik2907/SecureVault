@@ -1179,6 +1179,66 @@ body {
   gap: 0.4rem;
 }
 
+/* Pagination Controls */
+.sv-pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0 0.25rem;
+  border-top: 1px solid var(--border-subtle);
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.sv-page-size-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.sv-pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.sv-pagination-btn {
+  background: var(--bg-surface-subdued);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 0.5rem;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.sv-pagination-btn:hover:not(:disabled) {
+  background: #1e293b;
+  color: var(--text-primary);
+  border-color: var(--border-medium);
+}
+
+.sv-pagination-btn.active {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+  font-weight: 600;
+}
+
+.sv-pagination-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
 /* =========================================================================
    Workflow & Queue Grids (Requests.jsx)
    ========================================================================= */
@@ -1749,6 +1809,32 @@ body {
 }
 .sv-btn-tamper-demo:hover {
   background: rgba(220, 38, 38, 0.15);
+}
+
+.sv-btn-auth-reveal {
+  background: rgba(37, 99, 235, 0.12);
+  border: 1px solid rgba(37, 99, 235, 0.35);
+  color: #93c5fd;
+  font-size: 0.7rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border-radius: var(--radius-sm);
+}
+.sv-btn-auth-reveal:hover {
+  background: rgba(37, 99, 235, 0.25);
+  border-color: #3b82f6;
+  color: #ffffff;
+}
+
+.sv-hash-masked-dots {
+  letter-spacing: 0.2em;
+  color: #64748b;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  user-select: none;
 }
 
 /* =========================================================================
