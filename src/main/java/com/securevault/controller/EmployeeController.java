@@ -4,12 +4,13 @@ import com.securevault.entity.User;
 import com.securevault.service.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/employees")
+@RequestMapping({"/api/v1/employees", "/api/employees"})
 public class EmployeeController {
 
     private final EmployeeService employeeService;
@@ -19,6 +20,7 @@ public class EmployeeController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('BRANCH_MANAGER', 'MANAGER', 'ADMIN')")
     public ResponseEntity<User> createEmployee(@RequestBody User employee) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(employeeService.createEmployee(employee));
@@ -35,6 +37,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('BRANCH_MANAGER', 'MANAGER', 'ADMIN')")
     public ResponseEntity<User> updateEmployee(
             @PathVariable Long id,
             @RequestBody User employee) {
@@ -42,6 +45,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('BRANCH_MANAGER', 'MANAGER', 'ADMIN')")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
         employeeService.deleteEmployee(id);
         return ResponseEntity.noContent().build();

@@ -24,6 +24,8 @@ public class EmployeeServiceImpl implements EmployeeService {
             if (!employee.getPassword().startsWith("$2a$") && !employee.getPassword().startsWith("$2b$")) {
                 employee.setPassword(passwordEncoder.encode(employee.getPassword()));
             }
+        } else {
+            employee.setPassword(passwordEncoder.encode("password123"));
         }
         return userRepository.save(employee);
     }
@@ -50,6 +52,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         existing.setRole(employee.getRole());
         existing.setBranchId(employee.getBranchId());
         existing.setEnabled(employee.isEnabled());
+
+        if (employee.getPassword() != null && !employee.getPassword().isBlank()) {
+            if (!employee.getPassword().startsWith("$2a$") && !employee.getPassword().startsWith("$2b$")) {
+                existing.setPassword(passwordEncoder.encode(employee.getPassword()));
+            } else {
+                existing.setPassword(employee.getPassword());
+            }
+        }
 
         return userRepository.save(existing);
     }
