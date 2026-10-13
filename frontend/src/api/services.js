@@ -174,6 +174,16 @@ export const auditApi = {
       () => mockEngine.getAuditLogs(params),
       "audit"
     ),
-  simulateTamper: async (id) => mockEngine.simulateTamper(id),
-  reset: async () => mockEngine.reset(),
+  simulateTamper: async (id) =>
+    callApi(
+      () => api.post("/audit/tamper", { logId: id }),
+      () => mockEngine.simulateTamper(id),
+      "audit/tamper"
+    ),
+  reset: async () =>
+    callApi(
+      () => api.post("/audit/reset"),
+      () => mockEngine.reset(),
+      "audit/reset"
+    ),
 };

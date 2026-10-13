@@ -254,4 +254,36 @@ class AccessRequestControllerTest {
 
         assertEquals(expectedHash, latestAudit.getCurrentHash(), "Audit SHA-256 hash chain must match mathematical computation");
     }
+
+    @Test
+    @DisplayName("POST /api/v1/vault-requests/{id}/execute unlocks vault and writes audit hash block")
+    void testExecuteRequestUnlocksVaultAndWritesAuditLog() throws Exception {
+        VaultAccessRequest req = new VaultAccessRequest(testVault, officerUser, "Emergency vault access", 30);
+        req.setStatus("APPROVED");
+        req.setAuthorizationCode("AUTH-TEST99-2026");
+        req = requestRepository.save(req);
+
+        testVault.setLocked(true);
+        vaultRepository.save(testVault);
+
+        String payload = "{\"authorizationCode\":\"AUTH-TEST99-2026\"}";
+
+        mockMvc.perform(post("/api/v1/vault-requests/" + req.getId() + "/execute")
+                        .header("Authorization", officerToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.vaultId").value(testVault.getId()))
+                .andExpect(jsonPath("$.auditLog.eventType").value("VAULT_UNLOCKED"))
+                .andExpect(jsonPath("$.auditLog.currentHash").isNotEmpty());
+
+        // Verify vault is unlocked in repository
+        Vault updatedVault = vaultRepository.findById(testVault.getId()).orElseThrow();
+        assertFalse(updatedVault.isLocked());
+
+        // Verify request is ACCESSED
+        VaultAccessRequest updatedReq = requestRepository.findById(req.getId()).orElseThrow();
+        assertEquals("ACCESSED", updatedReq.getStatus());
+    }
 }

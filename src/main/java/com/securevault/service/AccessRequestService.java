@@ -2,6 +2,7 @@ package com.securevault.service;
 
 import com.securevault.dto.ApprovalDecisionRequest;
 import com.securevault.dto.ApprovalDecisionResponse;
+import com.securevault.dto.VaultExecuteResponse;
 import com.securevault.dto.VaultRequestDTO;
 import com.securevault.dto.VaultRequestResponse;
 
@@ -21,4 +22,6 @@ public interface AccessRequestService {
     VaultRequestResponse getRequestById(Long id);
 
     ApprovalDecisionResponse processDecision(Long requestId, ApprovalDecisionRequest decision, String approverUsername);
+
+    VaultExecuteResponse executeRequest(Long requestId, String authorizationCode, String executorUsername);
 }

@@ -1,8 +1,11 @@
 package com.securevault.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "vaults")
 public class Vault {
@@ -54,12 +57,19 @@ public class Vault {
         this.maxConcurrentAccess = maxConcurrentAccess;
     }
 
+    @JsonProperty("isLocked")
     public boolean isLocked() {
         return locked;
     }
 
+    @JsonProperty("isLocked")
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    @JsonProperty("locked")
+    public boolean getLocked() {
+        return locked;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -98,6 +108,7 @@ public class Vault {
     @Column(name = "max_concurrent_access", nullable = false)
     private Integer maxConcurrentAccess = 1;
 
+    @JsonProperty("isLocked")
     @Column(name = "is_locked", nullable = false)
     private boolean locked = true;
 

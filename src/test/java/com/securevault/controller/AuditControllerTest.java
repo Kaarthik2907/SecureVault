@@ -22,6 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -116,5 +117,26 @@ class AuditControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isValid").value(true))
                 .andExpect(jsonPath("$.message").value("Chain is fully valid."));
+    }
+
+    @Test
+    @DisplayName("POST /api/v1/audit/reset restores integrity and returns success")
+    void testResetChain() throws Exception {
+        mockMvc.perform(post("/api/v1/audit/reset"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.message").value("Audit hash chain integrity successfully restored."));
+    }
+
+    @Test
+    @DisplayName("POST /api/v1/audit/tamper modifies audit record for security testing")
+    void testSimulateTamper() throws Exception {
+        when(auditLogService.simulateTamper(any())).thenReturn(sampleLog);
+
+        mockMvc.perform(post("/api/v1/audit/tamper")
+                        .contentType("application/json")
+                        .content("{\"logId\":\"LOG-001\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.logId").value("LOG-001"));
     }
 }

@@ -145,4 +145,31 @@ class AuditLogServiceTest {
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
     }
+
+    @Test
+    @DisplayName("Should simulate tampering by appending marker to actionDetails")
+    void shouldSimulateTamperSuccessfully() {
+        when(auditLogRepository.findAllByOrderByIdAsc()).thenReturn(List.of(log1, log2));
+        when(auditLogRepository.findById(1L)).thenReturn(java.util.Optional.of(log1));
+        when(auditLogRepository.save(any(AuditLog.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        AuditLog tampered = auditLogService.simulateTamper(1L);
+
+        assertNotNull(tampered);
+        assertTrue(tampered.getActionDetails().contains("[MALICIOUS UNAUTHORIZED MODIFICATION]"));
+    }
+
+    @Test
+    @DisplayName("Should reset chain and recalculate valid hashes")
+    void shouldResetChainSuccessfully() {
+        log1.setActionDetails("Altered details [MALICIOUS UNAUTHORIZED MODIFICATION]");
+        when(auditLogRepository.findAllByOrderByIdAsc()).thenReturn(List.of(log1, log2));
+        when(auditLogRepository.save(any(AuditLog.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        auditLogService.resetChain();
+
+        assertFalse(log1.getActionDetails().contains("[MALICIOUS"));
+        assertEquals("Altered details", log1.getActionDetails());
+        assertNotNull(log1.getCurrentHash());
+    }
 }

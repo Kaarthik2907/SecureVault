@@ -38,6 +38,30 @@ public class AuditController {
     }
 
     /**
+     * Restores cryptographic integrity across the entire audit log hash chain.
+     */
+    @PostMapping("/reset")
+    public ResponseEntity<java.util.Map<String, Object>> resetChain() {
+        auditLogService.resetChain();
+        return ResponseEntity.ok(java.util.Map.of(
+                "success", true,
+                "message", "Audit hash chain integrity successfully restored."
+        ));
+    }
+
+    /**
+     * Simulates malicious tampering on an audit record for security verification testing.
+     */
+    @PostMapping({"/tamper", "/tamper/{id}"})
+    public ResponseEntity<?> simulateTamper(
+            @PathVariable(required = false) Object id,
+            @RequestBody(required = false) java.util.Map<String, Object> body) {
+        Object target = id != null ? id : (body != null ? body.get("logId") : null);
+        AuditLog tampered = auditLogService.simulateTamper(target);
+        return ResponseEntity.ok(tampered);
+    }
+
+    /**
      * Retrieves historical audit log records with optional filtering (vaultId, date range)
      * and pagination.
      *

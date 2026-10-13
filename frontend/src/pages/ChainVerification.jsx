@@ -421,7 +421,9 @@ export default function ChainVerification() {
             const isGenesis = index === 0;
             const isCompromised =
               !verification?.isChainValid &&
-              Number(verification?.tamperedLogId) === Number(log.id);
+              (Number(verification?.tamperedLogId) === Number(log.id) ||
+                String(verification?.tamperedLogId) === String(log.id) ||
+                String(verification?.tamperedLogId) === String(log.logId));
 
             const isRevealed = revealedBlockIds.has(log.id);
 

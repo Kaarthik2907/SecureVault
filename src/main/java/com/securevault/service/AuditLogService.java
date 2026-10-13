@@ -3,6 +3,7 @@ package com.securevault.service;
 import com.securevault.entity.AuditLog;
 import com.securevault.repository.AuditLogRepository;
 import com.securevault.util.HashChainUtil;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -30,7 +31,47 @@ public class AuditLogService {
     /**
      * DTO for returning the result of a chain verification.
      */
-    public record VerificationResult(boolean isValid, String message, String failingLogId) {}
+    public record VerificationResult(
+            @JsonProperty("isValid")
+            boolean isValid,
+
+            @JsonProperty("message")
+            String message,
+
+            @JsonProperty("tamperedLogId")
+            String failingLogId,
+
+            @JsonProperty("totalRecordsChecked")
+            long totalRecordsChecked,
+
+            @JsonProperty("expectedHash")
+            String expectedHash,
+
+            @JsonProperty("actualHash")
+            String actualHash,
+
+            @JsonProperty("verifiedAt")
+            LocalDateTime verifiedAt
+    ) {
+        public VerificationResult(boolean isValid, String message, String failingLogId) {
+            this(isValid, message, failingLogId, 0L, null, null, LocalDateTime.now());
+        }
+
+        @JsonProperty("isChainValid")
+        public boolean isChainValid() {
+            return isValid;
+        }
+
+        @JsonProperty("failingLogId")
+        public String failingLogIdProperty() {
+            return failingLogId;
+        }
+
+        @JsonProperty("logId")
+        public String logIdProperty() {
+            return failingLogId;
+        }
+    }
 
     /**
      * Creates a new audit log as part of the existing hash chain.
@@ -66,7 +107,7 @@ public class AuditLogService {
                         ? GENESIS_HASH
                         : latestLog.getCurrentHash();
 
-        LocalDateTime timestamp = LocalDateTime.now();
+        LocalDateTime timestamp = LocalDateTime.now().truncatedTo(java.time.temporal.ChronoUnit.SECONDS);
 
         /*
          * Convert timestamp to a deterministic string representation.
@@ -117,13 +158,20 @@ public class AuditLogService {
         List<AuditLog> logs = auditLogRepository.findAllByOrderByIdAsc();
         String expectedPreviousHash = GENESIS_HASH;
 
-        for (AuditLog log : logs) {
+        for (int i = 0; i < logs.size(); i++) {
+            AuditLog log = logs.get(i);
+            String logIdentifier = log.getLogId() != null ? log.getLogId() : (log.getId() != null ? String.valueOf(log.getId()) : "UNKNOWN");
+
             // 1. Verify the link to the previous record
             if (!expectedPreviousHash.equals(log.getPreviousHash())) {
                 return new VerificationResult(
                         false, 
                         "Broken chain link: previous_hash does not match the prior current_hash.", 
-                        log.getLogId()
+                        logIdentifier,
+                        i,
+                        expectedPreviousHash,
+                        log.getPreviousHash(),
+                        LocalDateTime.now()
                 );
             }
 
@@ -135,7 +183,7 @@ public class AuditLogService {
                     log.getEmployeeId(),
                     log.getVaultId(),
                     log.getActionDetails(),
-                    log.getTimestamp().toString()
+                    log.getTimestamp() != null ? log.getTimestamp().toString() : ""
             );
 
             // 3. Verify the recomputed hash matches the stored hash
@@ -143,7 +191,11 @@ public class AuditLogService {
                 return new VerificationResult(
                         false, 
                         "Data tampered: recomputed hash does not match stored current_hash.", 
-                        log.getLogId()
+                        logIdentifier,
+                        i,
+                        recomputedHash,
+                        log.getCurrentHash(),
+                        LocalDateTime.now()
                 );
             }
 
@@ -151,7 +203,72 @@ public class AuditLogService {
             expectedPreviousHash = log.getCurrentHash();
         }
 
-        return new VerificationResult(true, "Chain is fully valid.", null);
+        return new VerificationResult(true, "Chain is fully valid.", null, logs.size(), null, null, LocalDateTime.now());
+    }
+
+    /**
+     * Restores cryptographic integrity across the entire audit log chain.
+     * Cleans any simulation tampering text and recalculates valid SHA-256 forward links.
+     */
+    @Transactional
+    public void resetChain() {
+        List<AuditLog> logs = auditLogRepository.findAllByOrderByIdAsc();
+        String expectedPreviousHash = GENESIS_HASH;
+
+        for (AuditLog log : logs) {
+            if (log.getActionDetails() != null && log.getActionDetails().contains("[MALICIOUS")) {
+                log.setActionDetails(log.getActionDetails().replaceAll("\\[MALICIOUS[^\\]]*\\]", "").trim());
+            }
+            log.setPreviousHash(expectedPreviousHash);
+            String validHash = HashChainUtil.calculateHash(
+                    expectedPreviousHash,
+                    log.getLogId(),
+                    log.getEventType(),
+                    log.getEmployeeId(),
+                    log.getVaultId(),
+                    log.getActionDetails(),
+                    log.getTimestamp() != null ? log.getTimestamp().toString() : ""
+            );
+            log.setCurrentHash(validHash);
+            auditLogRepository.save(log);
+            expectedPreviousHash = validHash;
+        }
+    }
+
+    /**
+     * Simulates malicious tampering on a specific or latest audit log record for security demonstration.
+     */
+    @Transactional
+    public AuditLog simulateTamper(Object targetLogId) {
+        List<AuditLog> logs = auditLogRepository.findAllByOrderByIdAsc();
+        if (logs.isEmpty()) {
+            throw new IllegalStateException("No audit logs available to tamper.");
+        }
+
+        AuditLog target = null;
+        if (targetLogId != null) {
+            String targetStr = String.valueOf(targetLogId);
+            try {
+                Long numericId = Long.parseLong(targetStr);
+                target = auditLogRepository.findById(numericId).orElse(null);
+            } catch (NumberFormatException ignored) {}
+
+            if (target == null) {
+                for (AuditLog l : logs) {
+                    if (targetStr.equals(l.getLogId())) {
+                        target = l;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (target == null) {
+            target = logs.get(logs.size() - 1);
+        }
+
+        target.setActionDetails(target.getActionDetails() + " [MALICIOUS UNAUTHORIZED MODIFICATION]");
+        return auditLogRepository.save(target);
     }
 
     /**

@@ -153,6 +153,53 @@ public class AccessRequestServiceImpl implements AccessRequestService {
         );
     }
 
+    @Override
+    @Transactional
+    public com.securevault.dto.VaultExecuteResponse executeRequest(Long requestId, String authorizationCode, String executorUsername) {
+        VaultAccessRequest request = requestRepository.findById(requestId)
+                .orElseThrow(() -> new IllegalArgumentException("Vault access request not found with ID: " + requestId));
+
+        if (!"APPROVED".equalsIgnoreCase(request.getStatus())) {
+            throw new IllegalStateException("Cannot unlock vault. Request status is " + request.getStatus() + ". Request must be APPROVED.");
+        }
+
+        if (authorizationCode == null || !authorizationCode.trim().equalsIgnoreCase(request.getAuthorizationCode())) {
+            throw new IllegalArgumentException("Invalid cryptographic authorization code.");
+        }
+
+        // 1. Unlock the physical vault
+        Vault vault = request.getVault();
+        if (vault != null) {
+            vault.setLocked(false);
+            vaultRepository.save(vault);
+        }
+
+        // 2. Mark request as ACCESSED
+        request.setStatus("ACCESSED");
+        VaultAccessRequest updated = requestRepository.save(request);
+
+        // 3. Cryptographic hash chain write for terminal vault unlock
+        User executor = resolveUser(executorUsername, request.getRequestedBy() != null ? request.getRequestedBy().getId() : null);
+        String logId = generateLogId();
+        String details = String.format("Physical Vault #%d unlocked using Auth Code %s. Session duration started: %dm.",
+                vault != null ? vault.getId() : requestId, authorizationCode.trim(), request.getEstimatedDurationMinutes());
+
+        com.securevault.entity.AuditLog auditLog = auditLogService.createAuditLog(
+                logId,
+                "VAULT_UNLOCKED",
+                executor.getId(),
+                vault != null ? vault.getId() : null,
+                details
+        );
+
+        return new com.securevault.dto.VaultExecuteResponse(
+                true,
+                String.format("Vault #%d successfully unlocked!", vault != null ? vault.getId() : requestId),
+                vault != null ? vault.getId() : null,
+                auditLog
+        );
+    }
+
     private User resolveUser(String username, Long fallbackUserId) {
         if (username != null && !username.isBlank()) {
             return userRepository.findByUsername(username)
